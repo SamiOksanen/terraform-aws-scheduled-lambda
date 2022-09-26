@@ -13,19 +13,6 @@ provider "aws" {
   region = "eu-north-1"
 }
 
-variable "TEST_ENV_VARIABLE_ONE" {
-  type = string
-  description = "The application TEST_ENV_VARIABLE_ONE env var"
-  sensitive = true
-  nullable = false
-}
-
-variable "TEST_ENV_VARIABLE_TWO" {
-  type = string
-  description = "The application TEST_ENV_VARIABLE_TWO env var"
-  nullable = false
-}
-
 resource "aws_iam_role" "iam_for_lambda" {
   name               = "iam_for_lambda"
   assume_role_policy = <<EOF
@@ -63,8 +50,8 @@ resource "aws_lambda_function" "js_cron" {
 
   environment {
     variables = {
-      TEST_ENV_VARIABLE_ONE       = var.TEST_ENV_VARIABLE_ONE,
-      TEST_ENV_VARIABLE_TWO       = var.TEST_ENV_VARIABLE_TWO,
+      TEST_ENV_VARIABLE_ONE = var.TEST_ENV_VARIABLE_ONE,
+      TEST_ENV_VARIABLE_TWO = var.TEST_ENV_VARIABLE_TWO,
     }
   }
 }
