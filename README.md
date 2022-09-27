@@ -40,6 +40,19 @@ terraform apply terraform.plan
 terraform destroy
 ```
 
+## Optional but Recommended - Use AWS S3 Bucket to store Terraform state remotely
+It is recommended that you store your terraform configuration state somewhere remotely especially when multiple people work together.
+The `terraform_remote_state` directory uses AWS S3 Bucket to store the state remotely unlike the `terraform` directory which only stores the state locally.
+To use remote state storing: 
+- Create an S3 Bucket on your AWS account and change the bucket name in `terraform_remote_state/main.tf` file to match your bucket's name.
+  - Enable versioning for the Bucket, to easier rollbacks if needed.
+- Make sure all the people that need to be able to modify Terraform configuration have access to the remote state by adding the following IAM permissions for their IAM Users or Group:
+  - `s3:ListBucket` on `arn:aws:s3:::YOUR_BUCKET`
+  - `s3:GetObject` on `arn:aws:s3:::YOUR_BUCKET/path/to/your/key`
+  - `s3:PutObject` on `arn:aws:s3:::YOUR_BUCKET/path/to/your/key`
+  - `s3:DeleteObject` on `arn:aws:s3:::YOUR_BUCKET/path/to/your/key`
+- And of course, deployment from `terraform_remote_state` directory (`cd terraform_remote_state` instead of `cd terraform`)
+
 ## Helpful Resources 🫡
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs \
 https://docs.aws.amazon.com/lambda/latest/dg/lambda-typescript.html \
