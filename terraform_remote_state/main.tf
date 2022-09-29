@@ -45,13 +45,15 @@ resource "aws_iam_policy_attachment" "iam_policy_lambda_basic" {
 
 
 resource "aws_lambda_function" "js_cron" {
-  filename         = "../dist/function.zip"
   function_name    = "js_cron"
-  description      = "Simple TypeScript Lambda function for testing"
   role             = aws_iam_role.iam_for_lambda.arn
+  description      = "Simple TypeScript Lambda function for testing"
+  filename         = "../dist/function.zip"
   handler          = "index.handler"
+  memory_size      = 128
   runtime          = "nodejs16.x"
   source_code_hash = filebase64sha256("../dist/function.zip")
+  timeout          = 10
 
   environment {
     variables = {
