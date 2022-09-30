@@ -115,6 +115,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 terraform.plan
+cdktf.out
+cdktf.log
+.gen
 
 # IDEs and editors
 /.idea

@@ -1,5 +1,6 @@
 # Terraform AWS Scheduled Lambda Example 🛠
-
+![image](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white) 
+![image](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white) \
 This is an example on how to make a Terraform setup to create a scheduled AWS Lambda which is called once an hour by AWS CloudWatch Event.
 The lambda function itself is made with TypeScript.
 The setup includes use of environment variables which are passed to the lambda function.
@@ -41,7 +42,7 @@ terraform apply terraform.plan
 terraform destroy
 ```
 
-## Optional but Recommended - Use AWS S3 Bucket to store Terraform state remotely
+## Optional but Recommended - Use AWS S3 Bucket 🪣 to store Terraform state remotely
 It is recommended that you store your terraform configuration state somewhere remotely especially when multiple people work together.
 The `terraform_remote_state` directory uses AWS S3 Bucket to store the state remotely unlike the `terraform` directory which only stores the state locally.
 To use remote state storing: 
