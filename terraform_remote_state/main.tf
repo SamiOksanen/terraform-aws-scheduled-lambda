@@ -48,11 +48,11 @@ resource "aws_lambda_function" "js_cron" {
   function_name    = "js_cron"
   role             = aws_iam_role.iam_for_lambda.arn
   description      = "Simple TypeScript Lambda function for testing"
-  filename         = "../dist/function.zip"
+  filename         = "../lambda/dist/function.zip"
   handler          = "index.handler"
   memory_size      = 128
   runtime          = "nodejs16.x"
-  source_code_hash = filebase64sha256("../dist/function.zip")
+  source_code_hash = filebase64sha256("../lambda/dist/function.zip")
   timeout          = 10
 
   environment {

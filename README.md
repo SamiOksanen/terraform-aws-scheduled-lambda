@@ -23,15 +23,16 @@ npm i
 ```
 
 ### Required environment variables
-Add a `.env` file at the root of the repo, by copying the `.env.example` file.
+Add a `.env` file at the lambda directory of the repo, by copying the `.env.example` file.
 Set values to the environment variables in the `.env` file
 
 ## Deployment 🚚
 ```bash
+cd lambda
 npm run build
-cd terraform
+cd ../terraform
 terraform init
-env $(sed -e 's/^/TF_VAR_/' ../.env) terraform plan -out=terraform.plan
+env $(sed -e 's/^/TF_VAR_/' ../lambda/.env) terraform plan -out=terraform.plan
 terraform apply terraform.plan
 ```
 
@@ -51,7 +52,7 @@ To use remote state storing:
   - `s3:GetObject` on `arn:aws:s3:::YOUR_BUCKET/path/to/your/key`
   - `s3:PutObject` on `arn:aws:s3:::YOUR_BUCKET/path/to/your/key`
   - `s3:DeleteObject` on `arn:aws:s3:::YOUR_BUCKET/path/to/your/key`
-- And of course, deployment from `terraform_remote_state` directory (`cd terraform_remote_state` instead of `cd terraform`)
+- And of course, deployment from `terraform_remote_state` directory (`cd ../terraform_remote_state` instead of `cd ../terraform`)
 
 ## Helpful Resources 🫡
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs \
