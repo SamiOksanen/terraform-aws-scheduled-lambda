@@ -18,35 +18,13 @@ provider "aws" {
   region = "eu-north-1"
 }
 
-resource "aws_iam_role" "iam_for_lambda" {
-  name               = "iam_for_lambda"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
+module "aws_iam_lambda_basic_role" {
+  source = "../terraform_modules/aws_iam_lambda_basic_role"
 }
-EOF
-}
-
-resource "aws_iam_policy_attachment" "iam_policy_lambda_basic" {
-  name       = "iam_policy_lambda_basic"
-  roles      = [aws_iam_role.iam_for_lambda.name]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
 
 resource "aws_lambda_function" "js_cron" {
   function_name    = "js_cron"
-  role             = aws_iam_role.iam_for_lambda.arn
+  role             = module.aws_iam_lambda_basic_role.role
   description      = "Simple TypeScript Lambda function for testing"
   filename         = "../lambda/dist/function.zip"
   handler          = "index.handler"
@@ -63,22 +41,10 @@ resource "aws_lambda_function" "js_cron" {
   }
 }
 
-resource "aws_cloudwatch_event_rule" "every_hour" {
-  name                = "every-hour"
-  description         = "Fires at minute 0 of every hour."
-  schedule_expression = "cron(0 * ? * * *)"
-}
-
-resource "aws_cloudwatch_event_target" "js_cron_every_hour" {
-  rule      = aws_cloudwatch_event_rule.every_hour.name
-  target_id = "js_cron"
-  arn       = aws_lambda_function.js_cron.arn
-}
-
-resource "aws_lambda_permission" "allow_cloudwatch_to_call_js_cron" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
+module "aws_scheduled_lambda" {
+  source = "../terraform_modules/aws_scheduled_lambda"
+  schedule = "cron(0 * ? * * *)"
+  lambda_arn = aws_lambda_function.js_cron.arn
   function_name = aws_lambda_function.js_cron.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.every_hour.arn
+  target_id = "js_cron"
 }
